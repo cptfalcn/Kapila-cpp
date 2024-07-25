@@ -6,10 +6,10 @@ New Sundials version
 #include <sundials/sundials_nvector.h>
 #include <sundials/sundials_math.h>
 #include <nvector/nvector_serial.h>
-#include "TChem_CommandLineParser.hpp"
-#include "TChem_Util.hpp"
-#include "TChem_KineticModelData.hpp"
-#include "TChem_Impl_IgnitionZeroD_Problem.hpp" // here is where Ignition Zero D problem is implemented
+//#include "TChem_CommandLineParser.hpp"
+//#include "TChem_Util.hpp"
+//#include "TChem_KineticModelData.hpp"
+//#include "TChem_Impl_IgnitionZeroD_Problem.hpp" // here is where Ignition Zero D problem is implemented
 
 //CVODE includes
 #include <cvode/cvode.h>               /* prototypes for CVODE fcts., consts.  */
@@ -45,7 +45,7 @@ int CVodeComputeJacWrapper(realtype t, N_Vector u, N_Vector fy, SUNMatrix Jac,
 using value_type = realtype;
 //need the following hard call in the define.
 //using host_device_type = typename Tines::UseThisDevice<TChem::host_exec_space>::type;
-#define TCHEMPB TChem::Impl::IgnitionZeroD_Problem<value_type, Tines::UseThisDevice<TChem::host_exec_space>::type >
+//#define TCHEMPB TChem::Impl::IgnitionZeroD_Problem<value_type, Tines::UseThisDevice<TChem::host_exec_space>::type >
 
 //Change to Serial, this can be changed by altering the TChem master build profile to include OPENMP on or off
 #define BAR "===================="
@@ -54,10 +54,10 @@ using namespace std;
 //=====================
 //Prototypes & Classes
 //=====================
-class myPb : public TCHEMPB{
+class myPb{ // : public TCHEMPB{
 	public:
 	//members
-	ordinal_type  			num_equations;
+	int 		  			num_equations;
 	N_Vector 				Jac;
 	realtype 				t;
 	realtype 				MaxStepTaken;
@@ -67,7 +67,7 @@ class myPb : public TCHEMPB{
 	int 					Movie;
 	std :: string			dumpJacFile;
 	//functions
-	ordinal_type			get_num_equations(void)
+	int 					get_num_equations(void)
 	{
 		return this->num_equations;
 	}
@@ -197,10 +197,10 @@ int main(int argc, char* argv[])
 	// Set integrator parameters
 	//========================
 	int startingBasis[] = {1, 3};
-	cout<<"=======================Initial Data======================\n";
-	cout << setprecision(17);
-	cout <<"y=" << data[0] << "\t\t z=" << data[1] <<"\t\t Temp=" << data[2]<<endl;
-	cout << "relTol: " << relTol << "\t absTol: " << absTol << "\tStepSize: " << StepSize << endl;  
+	//cout<<"=======================Initial Data======================\n";
+	//cout << setprecision(17);
+	//cout <<"y=" << data[0] << "\t\t z=" << data[1] <<"\t\t Temp=" << data[2]<<endl;
+	//cout << "relTol: " << relTol << "\t absTol: " << absTol << "\tStepSize: " << StepSize << endl;  
 	//Run the cvode integrator
 	auto Start=std::chrono::high_resolution_clock::now();
 	if(opt == "CVODE")
@@ -299,28 +299,28 @@ int main(int argc, char* argv[])
 //FinalTime
 //StepSize
 //===========================================
-int CheckStep(realtype FinalTime, realtype StepSize)
-{
-	cout<<"======================Steps=========================\n";
-	cout<<"Checking the proposed number of steps...\n";
-	cout<<std::setprecision(17);
-	cout<<FinalTime/StepSize << " steps proposed...";
-  if(floor( FinalTime/StepSize ) == FinalTime/StepSize )
-	{
-    static const int Steps= FinalTime/StepSize;
-    cout << " accepted...\n";
-		return Steps;
-  }else if (abs(round(FinalTime/StepSize))-FinalTime/StepSize <1e-3 )
-  {
-	  	static const int Steps= round (FinalTime/StepSize);
-	  	cout << Steps << " steps has been approximated...\n";
-	  	return Steps;
-	}else
-  {
-    cout<<"Cannot perform non-integer number of steps!!\n";
-    exit(1);
-  }
-}
+// int CheckStep(realtype FinalTime, realtype StepSize)
+// {
+// 	cout<<"======================Steps=========================\n";
+// 	cout<<"Checking the proposed number of steps...\n";
+// 	cout<<std::setprecision(17);
+// 	cout<<FinalTime/StepSize << " steps proposed...";
+//   if(floor( FinalTime/StepSize ) == FinalTime/StepSize )
+// 	{
+//     static const int Steps= FinalTime/StepSize;
+//     cout << " accepted...\n";
+// 		return Steps;
+//   }else if (abs(round(FinalTime/StepSize))-FinalTime/StepSize <1e-3 )
+//   {
+// 	  	static const int Steps= round (FinalTime/StepSize);
+// 	  	cout << Steps << " steps has been approximated...\n";
+// 	  	return Steps;
+// 	}else
+//   {
+//     cout<<"Cannot perform non-integer number of steps!!\n";
+//     exit(1);
+//   }
+// }
 
 /*
  * ===========================================================================================
