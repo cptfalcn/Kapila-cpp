@@ -6,10 +6,6 @@ New Sundials version
 #include <sundials/sundials_nvector.h>
 #include <sundials/sundials_math.h>
 #include <nvector/nvector_serial.h>
-//#include "TChem_CommandLineParser.hpp"
-//#include "TChem_Util.hpp"
-//#include "TChem_KineticModelData.hpp"
-//#include "TChem_Impl_IgnitionZeroD_Problem.hpp" // here is where Ignition Zero D problem is implemented
 
 //CVODE includes
 #include <cvode/cvode.h>               /* prototypes for CVODE fcts., consts.  */
@@ -37,17 +33,12 @@ int RHS(realtype, N_Vector, N_Vector, void *);
 int Jtv(N_Vector, N_Vector, realtype, N_Vector, N_Vector , void *, N_Vector);
 int ComputeJac(N_Vector, void*);
 int CheckStep(realtype, realtype);
-void postProcess(N_Vector);
 int CVodeComputeJacWrapper(realtype t, N_Vector u, N_Vector fy, SUNMatrix Jac,
                void * pb, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
 
 using value_type = realtype;
-//need the following hard call in the define.
-//using host_device_type = typename Tines::UseThisDevice<TChem::host_exec_space>::type;
-//#define TCHEMPB TChem::Impl::IgnitionZeroD_Problem<value_type, Tines::UseThisDevice<TChem::host_exec_space>::type >
 
-//Change to Serial, this can be changed by altering the TChem master build profile to include OPENMP on or off
 #define BAR "===================="
 
 using namespace std;
@@ -198,9 +189,6 @@ int main(int argc, char* argv[])
 	//========================
 	int startingBasis[] = {1, 3};
 	//cout<<"=======================Initial Data======================\n";
-	//cout << setprecision(17);
-	//cout <<"y=" << data[0] << "\t\t z=" << data[1] <<"\t\t Temp=" << data[2]<<endl;
-	//cout << "relTol: " << relTol << "\t absTol: " << absTol << "\tStepSize: " << StepSize << endl;  
 	//Run the cvode integrator
 	auto Start=std::chrono::high_resolution_clock::now();
 	if(opt == "CVODE")
@@ -293,35 +281,6 @@ int main(int argc, char* argv[])
 //=========================================================
 */
 
-
-//===========================================
-//Check the number of steps
-//FinalTime
-//StepSize
-//===========================================
-// int CheckStep(realtype FinalTime, realtype StepSize)
-// {
-// 	cout<<"======================Steps=========================\n";
-// 	cout<<"Checking the proposed number of steps...\n";
-// 	cout<<std::setprecision(17);
-// 	cout<<FinalTime/StepSize << " steps proposed...";
-//   if(floor( FinalTime/StepSize ) == FinalTime/StepSize )
-// 	{
-//     static const int Steps= FinalTime/StepSize;
-//     cout << " accepted...\n";
-// 		return Steps;
-//   }else if (abs(round(FinalTime/StepSize))-FinalTime/StepSize <1e-3 )
-//   {
-// 	  	static const int Steps= round (FinalTime/StepSize);
-// 	  	cout << Steps << " steps has been approximated...\n";
-// 	  	return Steps;
-// 	}else
-//   {
-//     cout<<"Cannot perform non-integer number of steps!!\n";
-//     exit(1);
-//   }
-// }
-
 /*
  * ===========================================================================================
  * 
@@ -412,31 +371,6 @@ int Jtv(N_Vector v, N_Vector Jv, realtype t, N_Vector u, N_Vector fu, void *user
   return 0;
 }
 
-
-
-void postProcess(N_Vector solution)
-{
-	realtype * data = N_VGetArrayPointer(solution);
-	int len 		= N_VGetLength(solution);
-	for (int i = 0; i < len; i ++ )
-	{
-		data[i] = std::max(0.0, data[i]);
-	}
-	//std::cout << "I AM HERE\n";
-	
-	
-	/* 
-		Maximum Brilliance: 
-		clipping is equivalent to: x = (|x| + x ) / 2
-	
-		tmp = N_VClone(solution)
-		N_VScale(
-			0.5,
-			N_VLinearSum(N_VAbs(temp, temp), solution)
-		)
-	*/
-
-}
 int CVodeComputeJacWrapper(realtype t, N_Vector u, N_Vector fy, SUNMatrix Jac,
                void * pb, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
