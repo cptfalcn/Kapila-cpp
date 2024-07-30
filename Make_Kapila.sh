@@ -5,6 +5,7 @@ echo ========================================Building helpers===================
 -I /home/jstewart23/Code/C++/Sundials_6_2/INSTDIR/include \
 -I/home/jstewart23/Code/C++/epic-cpp/Integrators/AdaptiveKrylov \
 -I/home/jstewart23/Code/C++/epic-cpp/Integrators/EpiRK \
+-I /home/jstewart23/Code/C++/Kapila \
 -c  /home/jstewart23/Code/C++/Kapila/Epi3V.cpp -o Epi3V.o
 
 echo =========================================Helpers built===============================================

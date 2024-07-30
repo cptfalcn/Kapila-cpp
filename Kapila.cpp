@@ -23,6 +23,7 @@ New Sundials version
 #include <cstdlib>
 #include <chrono>
 #include "Epi3V.h"
+#include "ProblemClass.h"
 
 using namespace std;
 #define NEQ 3
@@ -42,31 +43,6 @@ int CVodeComputeJacWrapper(realtype t, N_Vector u, N_Vector fy, SUNMatrix Jac,
 #define BAR "===================="
 
 using namespace std;
-//=====================
-//Prototypes & Classes
-//=====================
-class myPb{
-	public:
-	//members
-	int 		  			num_equations;
-	N_Vector 				Jac;
-	realtype 				t;
-	realtype 				MaxStepTaken;
-	realtype 				MinStepTaken;
-	realtype 				ignTime;
-	realtype				KiopsTime;
-	SUNMatrix				Mat;
-	int 					Movie;
-	int						InternalSteps;
-	int						BadErrSteps;
-	int						BlowupSteps;
-	int						KiopsBlowups;
-	std :: string			stepRatioFile;
-	realtype 				stepRatio;
-	realtype				ProjectTime;
-	realtype				OrthogTime;
-};
-
 
 
 int main(int argc, char* argv[])
@@ -97,6 +73,7 @@ int main(int argc, char* argv[])
 	if(argc == 1)
 	{
 		//CheckStep(FinalTime, StepSize);
+		StepSize=stof(argv[1]);
 	}
 	else if(argc== 2)
 	{

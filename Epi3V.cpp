@@ -1,30 +1,8 @@
 #include "Epi3V.h"
+#include "ProblemClass.h"
 #include <cmath>
 
-//Set the necessary userdata class used in zeroD.  THIS MUST MATCH MAIN.
 using namespace std;
-class myPb{
-	public:
-	//members
-	int 		  			num_equations;
-	N_Vector 				Jac;
-	realtype 				t;
-	realtype 				MaxStepTaken;
-	realtype 				MinStepTaken;
-	realtype 				ignTime;
-	realtype				KiopsTime;
-	SUNMatrix				Mat;
-	int 					Movie;
-	int						InternalSteps;
-	int						BadErrSteps;
-	int						BlowupSteps;
-	int						KiopsBlowups;
-	std :: string			stepRatioFile;
-	realtype 				stepRatio;
-	realtype				ProjectTime;
-	realtype				OrthogTime;
-};
-
 //Minifactorial function
 int factorial2(int n) { return (n == 1 || n == 0) ? 1 : factorial2(n - 1) * n; }
 
