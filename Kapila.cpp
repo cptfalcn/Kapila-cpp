@@ -37,7 +37,7 @@ int CVodeComputeJacWrapper(realtype t, N_Vector u, N_Vector fy, SUNMatrix Jac,
                void * pb, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
 
-using value_type = realtype;
+//using value_type = realtype;
 
 #define BAR "===================="
 
@@ -45,7 +45,7 @@ using namespace std;
 //=====================
 //Prototypes & Classes
 //=====================
-class myPb{ // : public TCHEMPB{
+class myPb{
 	public:
 	//members
 	int 		  			num_equations;
@@ -54,16 +54,18 @@ class myPb{ // : public TCHEMPB{
 	realtype 				MaxStepTaken;
 	realtype 				MinStepTaken;
 	realtype 				ignTime;
+	realtype				KiopsTime;
 	SUNMatrix				Mat;
 	int 					Movie;
-	std :: string			dumpJacFile;
-	//functions
-	int 					get_num_equations(void)
-	{
-		return this->num_equations;
-	}
+	int						InternalSteps;
+	int						BadErrSteps;
+	int						BlowupSteps;
+	int						KiopsBlowups;
+	std :: string			stepRatioFile;
+	realtype 				stepRatio;
+	realtype				ProjectTime;
+	realtype				OrthogTime;
 };
-
 
 
 
