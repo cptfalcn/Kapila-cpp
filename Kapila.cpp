@@ -161,7 +161,8 @@ int main(int argc, char* argv[])
 
 	IntegratorStats *Stats = NULL;
 	Epi3VChem_KIOPS * EPI3V = new Epi3VChem_KIOPS(RHS, Jtv, 
-		CVodeComputeJacWrapper, pbptr, MaxKrylovIters, y, NEQ);
+		CVodeComputeJacWrapper, 
+		pbptr, MaxKrylovIters, y, NEQ);
 
 	//========================
 	// Set integrator parameters
@@ -185,26 +186,26 @@ int main(int argc, char* argv[])
 	realtype error_inf = 0;
  	realtype error_tmp = 0;
 	
-	if(EPS == 1e-1)
-	{
-		error_inf = max( 
-			data[0] - 0.000000002988028,
-			max(
-				data[1] - 0.032702315935000,
-				data[2] - 1.967297681076978
-			));
-      error_tmp = abs(data[2] - 1.967297681076978);
-	}
-	else if(EPS == 1e-2)
-	{
-		error_inf = max( 
-			abs(data[0] - 0.000000000000000),
-			max(
-				abs(data[1] - 0.005848132117459),
-				abs(data[2] - 1.994151867882557)
-			));
-    error_tmp = abs(data[2] - 1.994151867882557);
-	}
+	// if(EPS == 1e-1)
+	// {
+	// 	error_inf = max( 
+	// 		data[0] - 0.000000002988028,
+	// 		max(
+	// 			data[1] - 0.032702315935000,
+	// 			data[2] - 1.967297681076978
+	// 		));
+    //   error_tmp = abs(data[2] - 1.967297681076978);
+	// }
+	// else if(EPS == 1e-2)
+	// {
+	// 	error_inf = max( 
+	// 		abs(data[0] - 0.000000000000000),
+	// 		max(
+	// 			abs(data[1] - 0.005848132117459),
+	// 			abs(data[2] - 1.994151867882557)
+	// 		));
+    // error_tmp = abs(data[2] - 1.994151867882557);
+	// }
 
 	//=======================================
 	//Console Output
@@ -227,21 +228,15 @@ int main(int argc, char* argv[])
 	cout << "Steps taken: " << StepCount <<endl;
 	cout << "Integration time: " <<KTime << endl;
 	cout << "StepSize: " << StepSize << endl;
-
-	//cout << "Temp Error:" << error_tmp << std::endl;
-	//cout << "Error Inf:" << error_inf << std::endl;
-	//cout <<"Sum of y=" <<data[0]+ data [1] + data [2]<<"\t\t";
 	cout <<"Error in sum=" << abs(data[0]+data[1]+data[2]-2) <<endl;
 	cout <<"===================Printing data to " <<MyFile <<"==============\n";
 	//=======================================
 	//Data file output
 	//=======================================
 	ofstream myfile(MyFile, std::ios_base::app);
-	//myfile << opt << "\t\t";
 	myfile << setprecision(17) << fixed << data[0] << "\t\t" << data[1] << "\t\t";
 	myfile << data[2] << "\t\t" << StepCount << "\t\t" << KTime;
 	myfile << "\t\t" << absTol << "\t\t" << relTol << "\t\t" << abs(data[0]+data[1]+data[2]-2) <<endl;
-	//myfile << "\t\t" << Stats->numTimeSteps << endl;
 	myfile.close();
 	cout << "======================Simulation complete=============\n\n\n\n";
 
